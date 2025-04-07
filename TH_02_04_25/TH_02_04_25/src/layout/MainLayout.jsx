@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import './MainLayout.css'
 import Statistics from '../components/Statistics'
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import { products } from '../data/products';
 
 export default function MainLayout() {
     const [data, setData] = useState([])
@@ -11,6 +14,13 @@ export default function MainLayout() {
     .then(data => setData(data))
 
     }, [])
+    const columns = [
+        {field: 'code', header: 'Code'},
+        {field: 'name', header: 'Name'},
+        {field: 'category', header: 'Category'},
+        {field: 'quantity', header: 'Quantity'}
+    ];
+
 
   return (
     <div id='main'>
@@ -48,7 +58,7 @@ export default function MainLayout() {
                     {
                         data.map((st) => {
                             return(
-                                <Statistics st={st}></Statistics>
+                                <Statistics key={st.id} st={st}></Statistics>
                             )
                         })
                     }
@@ -66,38 +76,11 @@ export default function MainLayout() {
                     </div>
                 </div>
                 <div id='div-table'>
-                    <table>
-                        <tbody>
-                        <tr>
-                            <th>Cusotomer name</th>
-                            <th>Compan</th>
-                            <th>Order value</th>
-                            <th>Order date</th>
-                            <th>Status</th>
-                        </tr>
-                        <tr>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                        </tr>
-                        <tr>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                        </tr>
-                        <tr>
-                            <td>Quoc Huy</td> 
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                            <td>Quoc Huy</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <DataTable value={products} tableStyle={{ minWidth: '75vw'}}>
+                    {columns.map((col, i) => (
+                        <Column key={col.code} field={col.field} header={col.header} />
+                    ))}
+                </DataTable>
                 </div>
             </div>
         </div>
