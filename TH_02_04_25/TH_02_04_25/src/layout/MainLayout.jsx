@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import './MainLayout.css'
 import Statistics from '../components/Statistics'
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
-import { products } from '../data/products';
+import TableCustomer from '../components/TableCustomer/TableCustomer';
 
 export default function MainLayout() {
     const [data, setData] = useState([])
+    const [dataCustomer, setDataCustomer] = useState([]);
     
     useEffect(() => {
         fetch("https://67c81bf20acf98d07084e0cf.mockapi.io/Statistics")
-    .then(res => res.json())
-    .then(data => setData(data))
-
+        .then(res => res.json())
+        .then(data => setData(data))
     }, [])
-    const columns = [
-        {field: 'code', header: 'Code'},
-        {field: 'name', header: 'Name'},
-        {field: 'category', header: 'Category'},
-        {field: 'quantity', header: 'Quantity'}
-    ];
+
+    useEffect(() => {
+        fetch("https://67c81bf20acf98d07084e0cf.mockapi.io/customers")
+        .then(res => res.json())
+        .then(data => setDataCustomer(data))
+    }, [])
+
+
 
 
   return (
@@ -76,11 +76,7 @@ export default function MainLayout() {
                     </div>
                 </div>
                 <div id='div-table'>
-                <DataTable value={products} tableStyle={{ minWidth: '75vw'}}>
-                    {columns.map((col, i) => (
-                        <Column key={col.code} field={col.field} header={col.header} />
-                    ))}
-                </DataTable>
+                    <TableCustomer dataCustomer={dataCustomer}></TableCustomer>
                 </div>
             </div>
         </div>
