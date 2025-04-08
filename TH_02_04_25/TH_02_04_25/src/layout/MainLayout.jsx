@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import './MainLayout.css'
-import Statistics from '../components/Statistics'
-import TableCustomer from '../components/TableCustomer/TableCustomer';
-import { Navigate, NavLink, useNavigate } from 'react-router-dom'
+import {Outlet} from 'react-router-dom'
 import Header from '../components/Header';
 import Menu from '../components/Menu';
-import DashBoard from '../pages/DashBoard';
+import { useLabelContext } from '../hooks/LabelContex';
 
 export default function MainLayout() {
+  const {labelHeader} = useLabelContext();
   return (
-    // <div id='main'>
-    //     <div id='menu'>
-    //         <Menu></Menu>
-    //     </div>
-    //     <div id='header'>
-    //         <Header></Header>
-    //     </div>
-    //     <div id='content'>
-    //         <DashBoard></DashBoard>
-    //     </div>
-    // </div>
-    <></>
+    <div id='main'>
+        <div id='menu'>
+            <Menu></Menu>
+        </div>
+        <div id='header'>
+            <Header label={labelHeader}></Header>
+        </div>
+        <div id='content'>
+          <Outlet></Outlet>
+        </div>
+    </div>
   )
 }
