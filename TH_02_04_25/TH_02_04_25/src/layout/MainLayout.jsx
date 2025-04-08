@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react'
 import './MainLayout.css'
 import Statistics from '../components/Statistics'
 import TableCustomer from '../components/TableCustomer/TableCustomer';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom'
 
 export default function MainLayout() {
     const [data, setData] = useState([])
     const [dataCustomer, setDataCustomer] = useState([]);
+    const navigate = useNavigate();
     
     useEffect(() => {
         fetch("https://67c81bf20acf98d07084e0cf.mockapi.io/Statistics")
@@ -19,7 +21,9 @@ export default function MainLayout() {
         .then(data => setDataCustomer(data))
     }, [])
 
-
+    useEffect(() => {
+        navigate('/dashboard', { replace: true });
+      }, []);
 
 
   return (
@@ -27,12 +31,18 @@ export default function MainLayout() {
         <div id='menu'>
             <ul>
                 <img src="../images/Image 1858.png" alt="" />
-                <li style={{paddingLeft: "10px"}}><img src="../images/Pie chart.png" alt="" /><a href="">Dash board</a></li>
-                <li style={{paddingLeft: "10px"}}><img src="../images/Folder.png" alt="" /><a href="">Project</a></li>
-                <li style={{paddingLeft: "10px"}}><img src="../images/Groups.png" alt="" /><a href="">Teams</a></li>
-                <li style={{paddingLeft: "10px"}}><img src="../images/Pie chart.png" alt="" /><a href="">Analytics</a></li>
-                <li style={{paddingLeft: "10px"}}><img src="../images/Chat.png" alt="" /><a href="">Messages</a></li>
-                <li style={{paddingLeft: "10px"}}><img src="../images/Code.png" alt="" /><a href="">Integrations</a></li>
+                <li style={{paddingLeft: "10px"}}><img src="../images/Pie chart.png" alt="" />
+                <NavLink to="/dashboard" className={({isActive}) => isActive ? "active-link" : "normal-link"} href="#">Dash board</NavLink></li>
+                <li style={{paddingLeft: "10px"}}><img src="../images/Folder.png" alt="" />
+                <NavLink to="/project" className={({isActive}) => isActive ? "active-link" : "normal-link"} href="#">Project</NavLink></li>
+                <li style={{paddingLeft: "10px"}}><img src="../images/Groups.png" alt="" />
+                <NavLink to="/teams" className={({isActive}) => isActive ? "active-link" : "normal-link"} href="#">Teams</NavLink></li>
+                <li style={{paddingLeft: "10px"}}><img src="../images/Pie chart.png" alt="" />
+                <NavLink to="/analytics" className={({isActive}) => isActive ? "active-link" : "normal-link"} href="#">Analytics</NavLink></li>
+                <li style={{paddingLeft: "10px"}}><img src="../images/Chat.png" alt="" />
+                <NavLink to="/messages" className={({isActive}) => isActive ? "active-link" : "normal-link"} href="#">Messages</NavLink></li>
+                <li style={{paddingLeft: "10px"}}><img src="../images/Code.png" alt="" />
+                <NavLink to="/intergrations" className={({isActive}) => isActive ? "active-link" : "normal-link"} href="#">Integrations</NavLink></li>
             </ul>
             <div id='try-now'>
                 <h2>V2.0 is available</h2>
