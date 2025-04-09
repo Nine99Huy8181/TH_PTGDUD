@@ -1,80 +1,111 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
 import CustomerModal from '../CustomerModal';
+import { fetchCustomer } from '../../api/customerApi.api';
 
-export default function TableCustomer({dataCustomer}) {
-    const [selectedCustomer, setSelectedCustomer] = useState([])
-    const [show, setShow] = useState(false);
+export default function TableCustomer({ dataCustomer }) {
+    const [selectedCustomer, setSelectedCustomer] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [currentCustomer, setCurrentCustomer] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+    const handleOpenModal = async (customer) => {
+        setLoading(true);
+        try {
+            const customerDetail = await fetchCustomer(customer.id);
+            setCurrentCustomer(customerDetail);
+            setShowModal(true);
+        } catch (error) {
+            console.error("Failed to load customer details:", error);
+            setCurrentCustomer(customer);
+            setShowModal(true);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setCurrentCustomer(null);
+    };
+
     const customerNameColumn = (customer) => (
-        <span style={{display: 'flex', alignItems: 'center'}}><img src={customer.image} alt="" />
-        <span style={{marginLeft: '10px', fontWeight: 'bold'}}>{customer.customer_name}</span></span>
+        <span style={{ display: 'flex', alignItems: 'center' }}>
+            <img src={customer.image} alt="" style={{ width: 30, height: 30, borderRadius: '50%' }} />
+            <span style={{ marginLeft: '10px', fontWeight: 'bold' }}>{customer.customer_name}</span>
+        </span>
     );
-    const companyColumn = (customer) => (
-        <span>{customer.company}</span>
-    )
 
     const formatCurrency = (value) => {
-        return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
-    }
-    const priceBodyTemplate = (customer) => {
-        return formatCurrency(customer.order_value)
-    }
+        return value?.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) || '$0.00';
+    };
 
-    const getSeverity = (customer) => {
-        switch(customer.status){
-            case 'New':
-                return 'primary';
-            case 'In-progress':
-                return 'warning';
-            case 'Completed':
-                return 'success'
-            default:
-                console.log(customer.status)
-                return null;
+    const priceBodyTemplate = (customer) => formatCurrency(customer.order_value);
+
+    const getSeverity = (status) => {
+        switch (status) {
+            case 'New': return 'primary';
+            case 'In-progress': return 'warning';
+            case 'Completed': return 'success';
+            default: return null;
         }
-            
-    }
-    const statusBodyTemplate = (customer) => {
-        return <Tag value={customer.status} severity={getSeverity(customer)} rounded></Tag>
-    }
+    };
 
-    const footer = `${dataCustomer ? dataCustomer.length : 0} results`;
+    const statusBodyTemplate = (customer) => (
+        <Tag value={customer.status} severity={getSeverity(customer.status)} rounded />
+    );
 
-    const buttonUpdate = () => {
-        return <button
-        className='btn-update-customer'
-            onClick={() => setShow(true)}
+    const actionBodyTemplate = (customer) => (
+        <button
+            className="btn-update-customer"
+            onClick={() => handleOpenModal(customer)}
             style={{
-                backgroundImage: `url('../images/create.png')`,
-                backgroundPosition: "center",
+                background: "url('../images/create.png') center no-repeat",
                 backgroundColor: "transparent",
                 border: "none",
                 width: "20px",
                 height: "20px",
+                cursor: "pointer"
             }}
-        >     </button>
-    }
-    
-    const handleClose = () => setShow(false);
-        
-  return (
-   <>
-     <DataTable value={dataCustomer} 
-     paginator rows={6} paginatorLeft={footer} paginatorClassName='custom-paginator'
-     selectionMode={'checkbox'} selection={selectedCustomer} 
-     onSelectionChange={(e) => setSelectedCustomer(e.value)} dataKey="id" 
-     tableStyle={{ minWidth: '100%'}}>
-        <Column selectionMode="multiple" headerStyle={{ width: '3rem' }}></Column>
-        <Column header="CUSTOMER NAME" body={customerNameColumn}></Column>
-        <Column field="company" header="COMPANY"></Column>
-        <Column field="order_value" header="ORDER VALUE" body={priceBodyTemplate}></Column>
-        <Column field="order_date" header="ORDER DATE"></Column>
-        <Column header="STATUS" body={statusBodyTemplate}></Column>
-        <Column body={buttonUpdate}></Column>
-    </DataTable>
-    <CustomerModal showModal={show} handleCloseModal={handleClose} text={"Update"}></CustomerModal>
-   </>
-  )
+            disabled={loading}
+            aria-label="Edit customer"
+        />
+    );
+
+    const footer = `${dataCustomer?.length || 0} ${dataCustomer?.length === 1 ? 'result' : 'results'}`;
+
+    return (
+        <>
+            <DataTable
+                value={dataCustomer || []}
+                paginator
+                rows={6}
+                paginatorLeft={footer}
+                paginatorClassName="custom-paginator"
+                selectionMode="checkbox"
+                selection={selectedCustomer}
+                onSelectionChange={(e) => setSelectedCustomer(e.value)}
+                dataKey="id"
+                tableStyle={{ minWidth: '100%' }}
+                loading={loading}
+            >
+                <Column selectionMode="multiple" headerStyle={{ width: '3rem' }} />
+                <Column header="CUSTOMER NAME" body={customerNameColumn} />
+                <Column field="company" header="COMPANY" />
+                <Column header="ORDER VALUE" body={priceBodyTemplate} />
+                <Column field="order_date" header="ORDER DATE" />
+                <Column header="STATUS" body={statusBodyTemplate} />
+                <Column body={actionBodyTemplate} header="ACTIONS" />
+            </DataTable>
+
+            <CustomerModal
+                showModal={showModal}
+                handleCloseModal={handleCloseModal}
+                text="Update"
+                customer={currentCustomer}
+            />
+        </>
+    );
 }

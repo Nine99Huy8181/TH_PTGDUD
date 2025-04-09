@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import Statistics from '../components/Statistics';
 import TableCustomer from '../components/TableCustomer/TableCustomer';
-import Header from '../components/Header';
 import CustomerModal from '../components/CustomerModal';
+import { fetchCustomer, fetchStatistics, fetchCustomers } from '../api/customerApi.api';
 
 export default function DashBoard() {
     const [data, setData] = useState([])
@@ -11,16 +11,22 @@ export default function DashBoard() {
     const handleClose = () => setShow(false);
     
     useEffect(() => {
-        fetch("https://67c81bf20acf98d07084e0cf.mockapi.io/Statistics")
-        .then(res => res.json())
-        .then(data => setData(data))
-    }, [])
+        const loadData = async () => {
+            try {
+                const [stats, customers] = await Promise.all([
+                    fetchStatistics(),
+                    fetchCustomers(),
+                ]);
+                
+                setData(stats);
+                setDataCustomer(customers);
+            } catch (error) {
+                console.error("Failed to load data:", error);
+            }
+        };
+        loadData();
+    }, []);
 
-    useEffect(() => {
-        fetch("https://67c81bf20acf98d07084e0cf.mockapi.io/customers")
-        .then(res => res.json())
-        .then(data => setDataCustomer(data))
-    }, [])
   return (
     <>
         <div>
@@ -55,7 +61,7 @@ export default function DashBoard() {
                 <TableCustomer dataCustomer={dataCustomer}></TableCustomer>
             </div>
         </div>
-        <CustomerModal showModal={show} handleCloseModal={handleClose} text={"Add"}></CustomerModal>
+        <CustomerModal showModal={show} handleCloseModal={handleClose} text={"Add"} customer={null}></CustomerModal>
     </>
   )
 }
