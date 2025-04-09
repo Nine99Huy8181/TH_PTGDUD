@@ -47,13 +47,15 @@
     padding-bottom: 20px;
     max-width: 400px;
     min-width: 200px;
+    height: 100vh;
+    margin-left: 10px;
 }
 #menu > ul{
     padding: 0px;
 }
 #menu > ul > li{
     padding-left: 5px;
-    padding: 5px 0px;
+    padding: 9px 0px;
     list-style-type: none;
     margin: 10px 0px;
     display: flex;
@@ -62,7 +64,7 @@
 }
 #menu > ul > li > a {
     width: 100%;
-    min-width: 90px;
+    min-width: 70px;
     text-decoration: none;
     margin-left: 5px;
     color: gray;
@@ -101,7 +103,7 @@
     background-size: auto;
     background-position: 15px 10px;
     max-width: 320px;
-    min-width: 240px;
+    min-width: 250px;
     height: 310px;
     border-radius: 5px;
 }
@@ -135,12 +137,12 @@
 #import{
     background-image: url('../images/Download.png');
     background-repeat: no-repeat; 
-    background-position: 5px 5px; 
+    background-position: 7px 10px; 
 }
 #export{
     background-image: url('../images/Move up.png');
     background-repeat: no-repeat; 
-    background-position: 5px 5px; 
+    background-position: 7px 10px;
 }
 
 #div-component{
@@ -161,4 +163,23 @@ background-color: #e9e9e9;
 .custom-paginator .p-highlight {
     background-color:rgb(245 77 136);
     color: #fff;
+    border-radius: 100px;
 }
+.react-datepicker-wrapper {
+    display: block !important;
+}
+#input-date {
+    background-color: white;
+    width: 100%;
+    padding: 5px;
+    padding-left: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    outline: none;
+    transition: border-color 0.15s ease-in-out;
+  }
+  
+  #input-date:focus {
+    border-color: #4d90fe; /* Màu border khi focus */
+    box-shadow: 0 0 0 0.2rem rgba(77, 144, 254, 0.25); /* Thêm shadow (tuỳ chọn) */
+  }

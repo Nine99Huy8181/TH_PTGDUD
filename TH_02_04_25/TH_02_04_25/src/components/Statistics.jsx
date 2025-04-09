@@ -17,7 +17,7 @@ export default function Statistics({st}) {
 
   return (
     <div style={{backgroundColor: color, display: "flex",
-     width: "25%", borderRadius: "10px", justifyContent: "space-between", padding: "10px 30px"}}>
+     width: "30%", borderRadius: "10px", justifyContent: "space-between", padding: "10px 30px"}}>
         <div style={{fontFamily: "sans-serif"}}>
             <p style={{fontWeight: "bold", color: "black", fontSize: "18px"}}>{st.name}</p>
             {

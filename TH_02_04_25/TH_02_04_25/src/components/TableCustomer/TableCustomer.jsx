@@ -2,13 +2,11 @@ import React, { useState } from 'react'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Tag } from 'primereact/tag';
+import CustomerModal from '../CustomerModal';
 
 export default function TableCustomer({dataCustomer}) {
     const [selectedCustomer, setSelectedCustomer] = useState([])
-
-    const checkBoxColumn = () => (
-        <input type="checkbox" name="" id="" />
-    )
+    const [show, setShow] = useState(false);
     const customerNameColumn = (customer) => (
         <span style={{display: 'flex', alignItems: 'center'}}><img src={customer.image} alt="" />
         <span style={{marginLeft: '10px', fontWeight: 'bold'}}>{customer.customer_name}</span></span>
@@ -47,6 +45,7 @@ export default function TableCustomer({dataCustomer}) {
     const buttonUpdate = () => {
         return <button
         className='btn-update-customer'
+            onClick={() => setShow(true)}
             style={{
                 backgroundImage: `url('../images/create.png')`,
                 backgroundPosition: "center",
@@ -56,7 +55,9 @@ export default function TableCustomer({dataCustomer}) {
                 height: "20px",
             }}
         >     </button>
-    } 
+    }
+    
+    const handleClose = () => setShow(false);
         
   return (
    <>
@@ -73,7 +74,7 @@ export default function TableCustomer({dataCustomer}) {
         <Column header="STATUS" body={statusBodyTemplate}></Column>
         <Column body={buttonUpdate}></Column>
     </DataTable>
-
+    <CustomerModal showModal={show} handleCloseModal={handleClose} text={"Update"}></CustomerModal>
    </>
   )
 }

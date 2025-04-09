@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react'
 import Statistics from '../components/Statistics';
 import TableCustomer from '../components/TableCustomer/TableCustomer';
 import Header from '../components/Header';
+import CustomerModal from '../components/CustomerModal';
 
 export default function DashBoard() {
     const [data, setData] = useState([])
     const [dataCustomer, setDataCustomer] = useState([]);
+    const [show, setShow] = useState(false);
+    const handleClose = () => setShow(false);
     
     useEffect(() => {
         fetch("https://67c81bf20acf98d07084e0cf.mockapi.io/Statistics")
@@ -42,7 +45,9 @@ export default function DashBoard() {
                     <span style={{fontFamily: "sans-serif", fontWeight: "bold", fontSize: "20px"}}>Detail report</span>
                 </div>
                 <div>
-                    <button id='import'>Import</button>
+                    <button
+                        onClick={() => setShow(true)}
+                    id='import'>Import</button>
                     <button id='export'>Export</button>
                 </div>
             </div>
@@ -50,6 +55,7 @@ export default function DashBoard() {
                 <TableCustomer dataCustomer={dataCustomer}></TableCustomer>
             </div>
         </div>
+        <CustomerModal showModal={show} handleCloseModal={handleClose} text={"Add"}></CustomerModal>
     </>
   )
 }
