@@ -43,11 +43,11 @@
     display: flex;
     flex-direction: column;
     border-right: 1px solid #e9e9e9;
+    border-bottom: 1px solid #e9e9e9;
     padding-right: 10px;
     padding-bottom: 20px;
     max-width: 400px;
     min-width: 200px;
-    height: 100vh;
     margin-left: 10px;
 }
 #menu > ul{
@@ -123,6 +123,7 @@
 #content {
     grid-area: content;
     margin: 0px 20px;
+    border-bottom: 1px solid #e9e9e9;
 }
 #import, #export{
    padding: 7px 15px;
@@ -182,4 +183,18 @@ background-color: #e9e9e9;
   #input-date:focus {
     border-color: #4d90fe; /* Màu border khi focus */
     box-shadow: 0 0 0 0.2rem rgba(77, 144, 254, 0.25); /* Thêm shadow (tuỳ chọn) */
+  }
+
+  .p-tag.p-tag-primary{
+    background-color: #d3ecff;
+    color: #4d90fe;
+  }
+  .p-tag.p-tag-success{
+    background-color: #c8ffd9;
+    color: #26a84d;
+
+  }
+  .p-tag.p-tag-warning{
+    background-color: #ffead5;
+    color: #ccaf5e;
   }

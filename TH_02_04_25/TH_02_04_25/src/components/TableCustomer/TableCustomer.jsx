@@ -54,7 +54,7 @@ export default function TableCustomer({ dataCustomer }) {
     };
 
     const statusBodyTemplate = (customer) => (
-        <Tag value={customer.status} severity={getSeverity(customer.status)} rounded />
+        <Tag className='tag-status' value={customer.status} severity={getSeverity(customer.status)} rounded />
     );
 
     const actionBodyTemplate = (customer) => (
@@ -96,7 +96,8 @@ export default function TableCustomer({ dataCustomer }) {
                 <Column field="company" header="COMPANY" />
                 <Column header="ORDER VALUE" body={priceBodyTemplate} />
                 <Column field="order_date" header="ORDER DATE" />
-                <Column header="STATUS" body={statusBodyTemplate} />
+                <Column  header="STATUS"
+                        body={statusBodyTemplate}/>
                 <Column body={actionBodyTemplate} header="ACTIONS" />
             </DataTable>
 
