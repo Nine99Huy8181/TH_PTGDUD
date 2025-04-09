@@ -4,10 +4,11 @@ export const LabelContext = createContext();
 
 export const LabelProvider = ({children}) => {
     const [labelHeader, setLabelHeader] = useState('Dashboard');
+        const [updatePage, setUpdatePage] = useState(false);
 
     return (
         <LabelContext.Provider
-            value={{labelHeader, setLabelHeader}}
+            value={{labelHeader, setLabelHeader, updatePage, setUpdatePage}}
             >
             {children}
         </LabelContext.Provider>

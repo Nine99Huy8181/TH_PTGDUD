@@ -3,12 +3,14 @@ import Statistics from '../components/Statistics';
 import TableCustomer from '../components/TableCustomer/TableCustomer';
 import CustomerModal from '../components/CustomerModal';
 import { fetchCustomer, fetchStatistics, fetchCustomers } from '../api/customerApi.api';
+import { useLabelContext } from '../hooks/LabelContex';
 
 export default function DashBoard() {
     const [data, setData] = useState([])
-    const [dataCustomer, setDataCustomer] = useState([]);
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
+    const [dataCustomer, setDataCustomer] = useState([]);
+    const {updatePage} =useLabelContext();
     
     useEffect(() => {
         const loadData = async () => {
@@ -25,7 +27,7 @@ export default function DashBoard() {
             }
         };
         loadData();
-    }, []);
+    }, [updatePage]);
 
   return (
     <>

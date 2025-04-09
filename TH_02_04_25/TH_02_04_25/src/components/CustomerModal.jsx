@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
-import { updateCustomer, fetchLastCustomer } from '../api/customerApi.api';
+import { updateCustomer, createCustomer} from '../api/customerApi.api';
 import { Last } from 'react-bootstrap/esm/PageItem';
+import { useLabelContext } from '../hooks/LabelContex';
 
-export default function CustomerModal({ showModal, handleCloseModal, text, customer }) {
+export default function CustomerModal({ showModal, handleCloseModal, text, customer}) {
     const [formData, setFormData] = useState({
         customer_name: '',
         company: '',
         order_value: 0,
         order_date: null,
-        status: ''
+        status: '',
+        image: ''
     });
     const [selectedDate, setSelectedDate] = useState(null);
+    const {updatePage ,setUpdatePage} = useLabelContext();
 
     useEffect(() => {
         if (customer) {
@@ -46,12 +49,26 @@ export default function CustomerModal({ showModal, handleCloseModal, text, custo
             [name]: value
         }));
     };
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        const imageUrl = URL.createObjectURL(file);
+        console.log(imageUrl)
+        setFormData(prev => ({
+            ...prev,
+            [e.target.name]: imageUrl
+        }));
+    }
 
     const handleSubmit = async () => {
-        setFormData({...formData,
-            order_date: selectedDate
-        });
-        if(customer) await updateCustomer(customer.id, formData)
+        if(customer){ 
+            await updateCustomer(customer.id, formData)
+            setUpdatePage(!updatePage);
+        }
+        else {
+            await createCustomer(formData)
+            setUpdatePage(!updatePage)
+        }
+        
         handleCloseModal();
     };
 
@@ -99,13 +116,15 @@ export default function CustomerModal({ showModal, handleCloseModal, text, custo
                         <Form.Label>Order date</Form.Label>
                         <DatePicker
                             selected={selectedDate}
-                            onChange={(date) => setSelectedDate(date)}
+                            onChange={(date) => {
+                                setSelectedDate(date)
+                                setFormData({...formData, order_date: date})
+                            }}
                             placeholderText='dd-mm-yyyy'
                             dateFormat="dd-MM-yyyy"
                             className="form-control"
                         />
                     </Form.Group>
-
                     <Form.Group className="mb-3">
                         <Form.Label>Status</Form.Label>
                         <Form.Select
@@ -119,10 +138,14 @@ export default function CustomerModal({ showModal, handleCloseModal, text, custo
                             <option value="In-progress">In-progress</option>
                         </Form.Select>
                     </Form.Group>
+                    <Form.Control type="file" 
+                        name="image"
+                        onChange={handleImageChange}
+                    />
                 </Form>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="primary" onClick={handleSubmit}>
+                <Button variant="primary" onClick={() => handleSubmit()}>
                     {text}
                 </Button>
                 <Button variant="secondary" onClick={handleCloseModal}>

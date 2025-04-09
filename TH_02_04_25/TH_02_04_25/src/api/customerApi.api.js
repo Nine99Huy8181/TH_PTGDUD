@@ -64,3 +64,27 @@ export async function fetchLastCustomer() {
     }
 }
 
+export async function createCustomer(newCustomer){
+    try{
+        const response = await fetch('https://67c81bf20acf98d07084e0cf.mockapi.io/customers',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newCustomer)
+            }
+        );
+
+        if(!response.ok){
+            throw new Error(`HTTP error! status: ${response.status}`)
+        }
+
+        const newCus = await response.json();
+        return newCus;
+    }
+    catch (error){
+        console.error("Create customer error:", error);
+        return null;
+    }
+}
